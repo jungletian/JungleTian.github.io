@@ -1,0 +1,859 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="git," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="​    Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 [adr]fix: resolve NPE at ... 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git 使用之重写历史记录">
+<meta property="og:url" content="http://yoursite.com/2017/11/16/Git 使用之重写历史记录/index.html">
+<meta property="og:site_name" content="JungleTian&#39;s blog">
+<meta property="og:description" content="​    Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 [adr]fix: resolve NPE at ... 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNc79ly1flj1gjk68dj3069069dfn.jpg">
+<meta property="og:updated_time" content="2017-12-11T02:26:35.420Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git 使用之重写历史记录">
+<meta name="twitter:description" content="​    Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 [adr]fix: resolve NPE at ... 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/006tNc79ly1flj1gjk68dj3069069dfn.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'jungletian'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/16/Git 使用之重写历史记录/"/>
+
+
+
+
+
+  <title> Git 使用之重写历史记录 | JungleTian's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">JungleTian's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Android Developer</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/16/Git 使用之重写历史记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ZhangTitanjum">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JungleTian's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Git 使用之重写历史记录
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-16T00:00:00+08:00">
+                2017-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术文章/" itemprop="url" rel="index">
+                    <span itemprop="name">技术文章</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/11/16/Git 使用之重写历史记录/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/11/16/Git 使用之重写历史记录/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ws1.sinaimg.cn/large/006tNc79ly1flj1gjk68dj3069069dfn.jpg" rel="gallery_cjb1kvo4m00081iebqadzo4r1"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ws1.sinaimg.cn/large/006tNc79ly1flj1gjk68dj3069069dfn.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        <p>​    Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 <code>[adr]fix: resolve NPE at ...</code> 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。</p>
+<a id="more"></a>
+<h2 id="修改最后一个提交记录"><a href="#修改最后一个提交记录" class="headerlink" title="修改最后一个提交记录"></a><strong>修改最后一个提交记录</strong></h2><p>​    当提交的信息不明确、不符合规范或包含敏感信息时，则可以先在本地使用 <code>git commit --amend</code> 命令修改后再 push 到远程仓库。这个命令是修改本地最近提交记录的一种便捷方法，将之前的提交记录替换为新的提交记录，而不是创建新的提交记录，操作步骤如下：</p>
+<pre><code>1. 在命令行切换到当前要修改的分支。
+2. 输入 `git commit —amend` 或 `git commit --amend -m ’xxx‘`。 
+3. 在编辑器中，编辑要修改的提交信息并保存（添加 `-m` 参数则跳过此步骤）。
+</code></pre><p>​    若不修改提交信息的情况下，提交新的文件或修改文件内容，例如上次提交漏掉某个文件或添加代码注释，可以添加 <code>--no-edit</code> 参数：</p>
+<pre><code>1. 在命令行切换到当前要修改的分支。
+2. 添加暂存区 `git add xxx.txt` 。
+3. 输入 `git commit --amend --no-edit` 命令。
+</code></pre><p>​    <strong>注意：</strong>修改历史提交信息实际上是生成全新的 commit 替换旧的 commit，当前提交的 commit ID ( <a href="http://smilejay.com/2012/08/git-commit-sha-1/" target="_blank" rel="external">SHA-1值</a> ) 也会改变，因此要<strong>避免本地分支已经 push 到远程仓库的情况下修改历史提交记录</strong>。 </p>
+<p>​    当本地修改提交历史的分支已经在远程仓库时（如下图），远程分支（master）与本地分支（feature）HEAD 指针的 commit ID 不一致，所以 Git 默认认为本地分支不是 <code>fast-forward</code> 而不允许 <code>push</code>，因此只能先 <code>git pull</code>（<code>fetch</code> + <code>merge</code>） 远程代码才能执行 <code>push</code> 操作，我们知道 <code>merge</code> 时会产生一次没意义的提交记录，这样反而生成了两次 commit，对其他开发者来说比较困惑，而且历史记录变得更不清晰。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79ly1flislphzggj30hc08sdgm.jpg" alt=""></p>
+<h2 id="修改多次提交记录"><a href="#修改多次提交记录" class="headerlink" title="修改多次提交记录"></a><strong>修改多次提交记录</strong></h2><p>​    <code>git rebase</code> 命令可以修改多次提交历史，你可以重新排序，修改或合并多个提交记录。大多数情况下，使用 <code>git rebase</code> 命令的主要场景：</p>
+<h3 id="1-修改多个提交信息"><a href="#1-修改多个提交信息" class="headerlink" title="1. 修改多个提交信息"></a><strong>1. 修改多个提交信息</strong></h3><p>如下图将 Feature 分支 <code>fix update</code> 和 <code>fix update2</code> 两次 commit 信息按标准规范修改提交信息：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1flisnqwr9sj30gd092dgw.jpg" alt=""></p>
+<ol>
+<li><p>使用 <code>git rebase -i HEAD~n</code> 命令可在默认编辑器中显示 <code>n</code> 条最近提交历史的列表。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">pick 4e77435 first commit</span><br><span class="line">pick 994b124 [adr]完成需求</span><br><span class="line">pick 09di13d fix update</span><br><span class="line">pick 1a2c0f7 fix update2</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Rebase 4e77435..1a2c0f7 onto 4e77435 (4 commands)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Commands:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> p, pick = use commit </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> r, reword = use commit, but edit the commit message</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> e, edit = use commit, but stop <span class="keyword">for</span> amending </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> s, squash = use commit, but meld into previous commit </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> f, fixup = like <span class="string">"squash"</span>, but discard this commit<span class="string">'s log message </span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> x, <span class="built_in">exec</span> = run <span class="built_in">command</span> (the rest of the line) using shell </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> d, drop = remove commit </span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> These lines can be re-ordered; they are executed from top to bottom.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> If you remove a line here THAT COMMIT WILL BE LOST.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> However, <span class="keyword">if</span> you remove everything, the rebase will be aborted.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Note that empty commits are commented out</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将要修改的 commit 的 <code>pick</code> 命令修改为 <code>reword</code> 并保存退出：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pick <span class="number">4e77435</span> <span class="built_in">first</span> commit</span><br><span class="line">pick <span class="number">994b124</span> [adr]完成需求</span><br><span class="line">reword <span class="number">09di13d</span> <span class="built_in">fix</span> update</span><br><span class="line">reword 1a2c0f7 <span class="built_in">fix</span> update2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>按顺序依次打开文本编辑器，按标准规范编辑提交信息并依次保存退出，<code>git log</code> 查看历史信息：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* <span class="number">01ac0f7</span> - (HEAD -&gt; master) [adr]添加注释 (<span class="number">4</span> minutes ago) &lt;jungletian&gt;</span><br><span class="line">* <span class="number">085fc03</span> - [adr]优化代码 (<span class="number">4</span> minutes ago) &lt;jungletian&gt;</span><br><span class="line">* <span class="number">994b124</span> - [adr]完成需求 (<span class="number">27</span> hours ago) &lt;jungletian&gt;</span><br><span class="line">* <span class="number">4e77435</span> - <span class="built_in">first</span> commit (<span class="number">4</span> weeks ago) &lt;jungletian&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="2-合并多个提交"><a href="#2-合并多个提交" class="headerlink" title="2. 合并多个提交"></a><strong>2. 合并多个提交</strong></h3><p>​    如下图，为了使 Feature 分支保留清晰的提交历史记录，将后面两次的 commit 合并到一个 commit 再 push 到远程仓库：</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1flisj8c5zuj30f8063wex.jpg" alt=""></p>
+<ol>
+<li><p>按上文执行 <code>git rebase -i HEAD~n</code> 命令。</p>
+</li>
+<li><p>将最后两次 commit 的 <code>pick</code> 命令修改为 <code>fixup</code>，根据自己情况决定是否需要重写（reword）合并之后的提交信息：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pick <span class="number">4e77435</span> <span class="built_in">first</span> commit</span><br><span class="line">reword <span class="number">994b124</span> [adr]完成需求</span><br><span class="line">fixup <span class="number">085fc03</span> [adr]优化代码</span><br><span class="line">fixup <span class="number">01ac0f7</span> [adr]添加注释</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>保存退出编辑器，如果使用 <code>reword</code> 命令则会打开新的编辑器，输入新的提交信息并保存退出 (wq)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[adr]完成需求 + 优化代码 + 添加注释</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Please enter the commit message <span class="keyword">for</span> your changes. Lines starting</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> with <span class="string">'#'</span> will be ignored, and an empty message aborts the commit.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Date:      Tue Nov 14 14:31:54 2017 +0800</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> interactive rebase <span class="keyword">in</span> progress; onto d4b6ad8</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Last commands <span class="keyword">done</span> (1 commands <span class="keyword">done</span>):</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    r 994b124 [adr]完成需求</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Next commands to <span class="keyword">do</span> (2 remaining commands):</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    f 085fc03 [adr]优化代码</span></span><br><span class="line"><span class="meta">#</span><span class="bash">    f 01ac0f7 [adr]添加注释</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> You are currently editing a commit <span class="keyword">while</span> rebasing branch <span class="string">'master'</span> on <span class="string">'d4b6ad8'</span>.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Changes to be committed:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       new file:   f.txt</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="3-git-pull-rebase"><a href="#3-git-pull-rebase" class="headerlink" title="3. git pull --rebase"></a>3. <strong><code>git pull --rebase</code></strong></h3><p>​    当多人维护一个分支时，你的同伴先于你 <code>push</code> 了代码到远程分支上，所以按上文提到的 Git 默认策略，你必须先执行 <code>git pull</code> 来获取同伴的提交，然后才能 <code>push</code> 自己的提交到远程分支。上文介绍了 Git 的默认策略，会执行一次  <code>merge</code> 操作，因此产生一次没意义的提交记录。</p>
+<p>​    其实在 <code>git pull</code> 操作的时候，使用 <code>git pull --rebase</code> 选项即可很好地解决上述问题。 加上 <code>--rebase</code> 参数的作用是，提交线图有分叉的话，Git 会 rebase 策略来代替默认的 merge 策略。 使用 rebase 策略有什么好处呢？下图就可以很好地说明清楚了：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcly1fl9eqclcyhj30g00c93z2.jpg" alt=""></p>
+<h2 id="数据永远不会丢失"><a href="#数据永远不会丢失" class="headerlink" title="数据永远不会丢失"></a><strong>数据永远不会丢失</strong></h2><p>​    在使用 Git 过程中，修改历史记录相对来说是一个比较危险的动作，有时会操作不小心“丢失”了 commit 信息，但是我们开篇已经介绍了 Git 的主要工作就是确保永远不会丢失已经提交的记录，因此 Git 提供了 <code>git reflog</code> 命令来查看所有提交过的 commit 信息，一般操作步骤如下：</p>
+<ol>
+<li><p>命令行切换到指定分支，执行 <code>git reflog</code>/<code>git log -g</code> 命令。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">ebacbc7</span> (HEAD -&gt; master) <span class="selector-tag">HEAD</span><span class="variable">@&#123;0&#125;</span>: <span class="selector-tag">reset</span>: <span class="selector-tag">moving</span> <span class="selector-tag">to</span> <span class="selector-tag">ebacbc703ee082ad3551982ceafe37e96e07813a</span></span><br><span class="line"><span class="selector-tag">d4bdce4</span> <span class="selector-tag">HEAD</span><span class="variable">@&#123;1&#125;</span>: <span class="selector-tag">commit</span>: 丢失了信息</span><br><span class="line"><span class="selector-tag">2ee891c</span> <span class="selector-tag">HEAD</span><span class="variable">@&#123;2&#125;</span>: <span class="selector-tag">rebase</span> <span class="selector-tag">-i</span> (finish): <span class="selector-tag">returning</span> <span class="selector-tag">to</span> <span class="selector-tag">refs</span>/<span class="selector-tag">heads</span>/<span class="selector-tag">master</span></span><br><span class="line"><span class="selector-tag">2ee891c</span> <span class="selector-tag">HEAD</span><span class="variable">@&#123;3&#125;</span>: <span class="selector-tag">rebase</span> <span class="selector-tag">-i</span> (reword): <span class="selector-attr">[adr]</span>添加注释</span><br><span class="line"><span class="selector-tag">6bcaf2d</span> <span class="selector-tag">HEAD</span><span class="variable">@&#123;4&#125;</span>: <span class="selector-tag">rebase</span> <span class="selector-tag">-i</span> (reword): <span class="selector-attr">[adr]</span>优化代码</span><br><span class="line"><span class="selector-tag">bd857f4</span> <span class="selector-tag">HEAD</span><span class="variable">@&#123;5&#125;</span>: <span class="selector-tag">rebase</span> <span class="selector-tag">-i</span>: <span class="selector-tag">fast-forward</span></span><br><span class="line"><span class="selector-tag">ebacbc7</span> (HEAD -&gt; master) <span class="selector-tag">HEAD</span><span class="variable">@&#123;6&#125;</span>: <span class="selector-tag">rebase</span> <span class="selector-tag">-i</span> (start): <span class="selector-tag">checkout</span> <span class="selector-tag">refs</span>/<span class="selector-tag">remotes</span>/<span class="selector-tag">origin</span>/<span class="selector-tag">master</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复制要回退的 commit ID  并退出文本编辑器，命令行执行 <code>git reset --hard &lt;commitID&gt;</code> 或 checkout 一个新的分支。 </p>
+</li>
+<li><p>命令行执行 <code>git log --pretty=oneline</code> 查看当前历史提交信息是否正确，如果不正确仍可按照第一个步骤继续操作。</p>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h2><p>​    Git 是一个当前最流行的分布式版本控制工具之一，其可以完全离线操作的特点直中 SVN 的痛点，因此深受开发者喜爱，关于 Git 的要学习的内容还有很多，本篇文章只介绍了其中的一部分—重写历史记录，后续会持续给大家分享关于 Git 使用上的技巧和使用场景。如果有不完善或者表述不正确的地方欢迎大家指正，谢谢！</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a><strong>参考文献</strong></h3><p><a href="https://www.atlassian.com/git/tutorials/rewriting-history" target="_blank" rel="external">Rewriting history</a><br><a href="https://help.github.com/articles/changing-a-commit-message/" target="_blank" rel="external">Changing a commit message</a><br><a href="https://help.github.com/articles/about-git-rebase/" target="_blank" rel="external">About Git rebase</a><br><a href="https://help.github.com/articles/about-pull-request-merges/" target="_blank" rel="external">About pull request merges</a><br><a href="http://hungyuhei.github.io/2012/08/07/better-git-commit-graph-using-pull---rebase-and-merge---no-ff.html" target="_blank" rel="external">洁癖者用 Git：pull –rebase 和 merge –no-ff</a> </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/git/" rel="tag"># git</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/30/2016年，成长的一年/" rel="next" title="2016年，成长的一年。">
+                <i class="fa fa-chevron-left"></i> 2016年，成长的一年。
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/11/16/Git 使用之重写历史记录/"
+           data-title="Git 使用之重写历史记录" data-url="http://yoursite.com/2017/11/16/Git 使用之重写历史记录/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="ZhangTitanjum" />
+          <p class="site-author-name" itemprop="name">ZhangTitanjum</p>
+           
+              <p class="site-description motion-element" itemprop="description">Nobody can go back and start a new begining, but anyone can start today and make a new ending.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/jungletian" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/jungletian" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/5183549756" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/zhangtitanjum/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#修改最后一个提交记录"><span class="nav-number">1.</span> <span class="nav-text">修改最后一个提交记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改多次提交记录"><span class="nav-number">2.</span> <span class="nav-text">修改多次提交记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-修改多个提交信息"><span class="nav-number">2.1.</span> <span class="nav-text">1. 修改多个提交信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-合并多个提交"><span class="nav-number">2.2.</span> <span class="nav-text">2. 合并多个提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-git-pull-rebase"><span class="nav-number">2.3.</span> <span class="nav-text">3. git pull --rebase</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据永远不会丢失"><span class="nav-number">3.</span> <span class="nav-text">数据永远不会丢失</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-number">4.1.</span> <span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ZhangTitanjum</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"jungletian"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
