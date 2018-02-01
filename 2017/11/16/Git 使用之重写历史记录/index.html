@@ -87,19 +87,19 @@
 
 
 
-<meta name="description" content="​    Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 [adr]fix: resolve NPE at ... 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。">
+<meta name="description" content="Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 `[adr]fix: resolve NPE at ...` 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。">
 <meta name="keywords" content="git">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git 使用之重写历史记录">
 <meta property="og:url" content="http://yoursite.com/2017/11/16/Git 使用之重写历史记录/index.html">
 <meta property="og:site_name" content="JungleTian&#39;s blog">
-<meta property="og:description" content="​    Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 [adr]fix: resolve NPE at ... 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。">
+<meta property="og:description" content="Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 `[adr]fix: resolve NPE at ...` 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNc79ly1flj1gjk68dj3069069dfn.jpg">
-<meta property="og:updated_time" content="2017-12-11T02:26:35.420Z">
+<meta property="og:updated_time" content="2018-02-01T12:48:25.106Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git 使用之重写历史记录">
-<meta name="twitter:description" content="​    Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 [adr]fix: resolve NPE at ... 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。">
+<meta name="twitter:description" content="Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 `[adr]fix: resolve NPE at ...` 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。">
 <meta name="twitter:image" content="https://ws1.sinaimg.cn/large/006tNc79ly1flj1gjk68dj3069069dfn.jpg">
 
 
@@ -380,7 +380,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws1.sinaimg.cn/large/006tNc79ly1flj1gjk68dj3069069dfn.jpg" rel="gallery_cjb7zhpgo000b6teblds4g7w5"
+                 href="https://ws1.sinaimg.cn/large/006tNc79ly1flj1gjk68dj3069069dfn.jpg" rel="gallery_cjd4i2ybc000722eb951n22uo"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws1.sinaimg.cn/large/006tNc79ly1flj1gjk68dj3069069dfn.jpg" itemprop="contentUrl"/>
               </a>
@@ -393,8 +393,8 @@
       
 
       
-        <p>​    Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 <code>[adr]fix: resolve NPE at ...</code> 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。</p>
-<a id="more"></a>
+        <pre><code>Git 是免费开源的分布式版本控制系统，主要工作就是确保永远不会丢失已经提交的记录，但是 Git 的设计初衷也是为了让我们掌控开发的工作流程和规范，如 `[adr]fix: resolve NPE at ...` 方便以后查看历史提交记录。然而开发过程中难免会遇到提交信息错误或不符合规范的情况，下面将直奔主题介绍一下如何修改 git 的提交历史记录。
+</code></pre><a id="more"></a>
 <h2 id="修改最后一个提交记录"><a href="#修改最后一个提交记录" class="headerlink" title="修改最后一个提交记录"></a><strong>修改最后一个提交记录</strong></h2><p>​    当提交的信息不明确、不符合规范或包含敏感信息时，则可以先在本地使用 <code>git commit --amend</code> 命令修改后再 push 到远程仓库。这个命令是修改本地最近提交记录的一种便捷方法，将之前的提交记录替换为新的提交记录，而不是创建新的提交记录，操作步骤如下：</p>
 <pre><code>1. 在命令行切换到当前要修改的分支。
 2. 输入 `git commit —amend` 或 `git commit --amend -m ’xxx‘`。 
@@ -499,8 +499,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/12/15/Android-开发工作中常用快捷键/" rel="prev" title="Android 开发工作中常用快捷键">
-                Android 开发工作中常用快捷键 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/11/30/Git 使用之常用快捷键/" rel="prev" title="Git 使用之常用快捷键">
+                Git 使用之常用快捷键 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -577,7 +577,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -588,7 +588,7 @@
             
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">分类</span>
               
             </div>
@@ -599,7 +599,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -695,7 +695,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

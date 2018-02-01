@@ -87,19 +87,19 @@
 
 
 
-<meta name="description" content="Android 开发常用 adb 命令   adb 命令 描述     adb logcat -v time &amp;gt; log.txt 打印log并保存   adb shell dumpsys activity top 查看最顶层 Activity 元素   adb shell dumpsys activity activities 查看栈内的信息 参数可选为 sed -En -e &amp;#39;/S">
+<meta name="description" content="Android 开发常用 adb 命令   adb 命令 描述     adb logcat -v time &amp;gt; log.txt 打印 log 并保存到文件里   adb shell dumpsys activity top 查看最顶层 Activity 元素   adb shell dumpsys activity activities 查看栈内的信息 参数可选为 sed -En -e &amp;">
 <meta name="keywords" content="android,开发工具">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android 开发工作中常用快捷键">
 <meta property="og:url" content="http://yoursite.com/2017/12/15/Android-开发工作中常用快捷键/index.html">
 <meta property="og:site_name" content="JungleTian&#39;s blog">
-<meta property="og:description" content="Android 开发常用 adb 命令   adb 命令 描述     adb logcat -v time &amp;gt; log.txt 打印log并保存   adb shell dumpsys activity top 查看最顶层 Activity 元素   adb shell dumpsys activity activities 查看栈内的信息 参数可选为 sed -En -e &amp;#39;/S">
+<meta property="og:description" content="Android 开发常用 adb 命令   adb 命令 描述     adb logcat -v time &amp;gt; log.txt 打印 log 并保存到文件里   adb shell dumpsys activity top 查看最顶层 Activity 元素   adb shell dumpsys activity activities 查看栈内的信息 参数可选为 sed -En -e &amp;">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79ly1fmhrt0pi0zj3074074dg5.jpg">
-<meta property="og:updated_time" content="2017-12-15T14:03:09.786Z">
+<meta property="og:updated_time" content="2017-12-27T14:31:10.150Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android 开发工作中常用快捷键">
-<meta name="twitter:description" content="Android 开发常用 adb 命令   adb 命令 描述     adb logcat -v time &amp;gt; log.txt 打印log并保存   adb shell dumpsys activity top 查看最顶层 Activity 元素   adb shell dumpsys activity activities 查看栈内的信息 参数可选为 sed -En -e &amp;#39;/S">
+<meta name="twitter:description" content="Android 开发常用 adb 命令   adb 命令 描述     adb logcat -v time &amp;gt; log.txt 打印 log 并保存到文件里   adb shell dumpsys activity top 查看最顶层 Activity 元素   adb shell dumpsys activity activities 查看栈内的信息 参数可选为 sed -En -e &amp;">
 <meta name="twitter:image" content="https://ws3.sinaimg.cn/large/006tNc79ly1fmhrt0pi0zj3074074dg5.jpg">
 
 
@@ -380,7 +380,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79ly1fmhrt0pi0zj3074074dg5.jpg" rel="gallery_cjb7zhpgm00076tebqq2nv0ds"
+                 href="https://ws3.sinaimg.cn/large/006tNc79ly1fmhrt0pi0zj3074074dg5.jpg" rel="gallery_cjd4i2ybf000822ebs7pmy57a"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79ly1fmhrt0pi0zj3074074dg5.jpg" itemprop="contentUrl"/>
               </a>
@@ -403,7 +403,7 @@
 <tbody>
 <tr>
 <td><code>adb logcat -v time &gt; log.txt</code></td>
-<td>打印log并保存</td>
+<td>打印 log 并保存到文件里</td>
 </tr>
 <tr>
 <td><code>adb shell dumpsys activity top</code></td>
@@ -467,7 +467,7 @@
 <h3 id="常用-app-快捷键"><a href="#常用-app-快捷键" class="headerlink" title="常用 app 快捷键"></a><strong>常用 app 快捷键</strong></h3><table>
 <thead>
 <tr>
-<th>快捷键</th>
+<th>命令</th>
 <th>描述</th>
 </tr>
 </thead>
@@ -572,6 +572,40 @@
 </tr>
 </tbody>
 </table>
+<h3 id="Linux-系统常用命令"><a href="#Linux-系统常用命令" class="headerlink" title="Linux 系统常用命令 "></a><strong>Linux 系统常用命令 </strong></h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ln -s &lt;source_file&gt; &lt;link_file_name&gt;</code></td>
+<td>创建快捷方式(-s 软链接 默认是硬链接)</td>
+</tr>
+<tr>
+<td><code>cat &lt;file_name&gt;</code></td>
+<td>查看文件</td>
+</tr>
+<tr>
+<td><code>cat &lt;file_name&gt; &lt;file_name2&gt; &gt; &lt;file_name3&gt;</code></td>
+<td>将两个文件内容复制到另外一个文件</td>
+</tr>
+<tr>
+<td><code>touch &lt;file_name&gt;</code></td>
+<td>创建文件</td>
+</tr>
+<tr>
+<td><code>grep -n &quot;^word&quot;/&quot;word$&quot; &lt;file_name&gt;</code></td>
+<td>在指定文件里面搜索单词(-n: 显示行数；-v：不包含 <code>word</code> 的单词)</td>
+</tr>
+<tr>
+<td><code>cp &lt;folder_name&gt; &lt;folder_name2&gt; -r</code></td>
+<td>拷贝文件夹</td>
+</tr>
+</tbody>
+</table>
 <h3 id="调试技巧"><a href="#调试技巧" class="headerlink" title="调试技巧"></a><strong>调试技巧</strong></h3><pre><code>调试状态下，按住Alt键，然后单击表达式即可
 右键需要填写表达式的断点，然后输入布尔表达式
 在断点上右键，取消Suspend的勾选，然后勾选上Log evaluated Expression，并在输入框中输入你要打印的日志信息。
@@ -619,8 +653,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/16/Git 使用之重写历史记录/" rel="next" title="Git 使用之重写历史记录">
-                <i class="fa fa-chevron-left"></i> Git 使用之重写历史记录
+              <a href="/2017/11/30/Git 使用之常用快捷键/" rel="next" title="Git 使用之常用快捷键">
+                <i class="fa fa-chevron-left"></i> Git 使用之常用快捷键
               </a>
             
           </div>
@@ -628,6 +662,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/03/Linux 常用命令/" rel="prev" title="Linux 常用命令">
+                Linux 常用命令 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -703,7 +741,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -714,7 +752,7 @@
             
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">分类</span>
               
             </div>
@@ -725,7 +763,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -798,7 +836,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-开发常用-adb-命令"><span class="nav-number">1.</span> <span class="nav-text">Android 开发常用 adb 命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用-app-快捷键"><span class="nav-number">2.</span> <span class="nav-text">常用 app 快捷键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Studio-快捷键"><span class="nav-number">3.</span> <span class="nav-text">Android Studio 快捷键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试技巧"><span class="nav-number">4.</span> <span class="nav-text">调试技巧</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-开发常用-adb-命令"><span class="nav-number">1.</span> <span class="nav-text">Android 开发常用 adb 命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用-app-快捷键"><span class="nav-number">2.</span> <span class="nav-text">常用 app 快捷键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Studio-快捷键"><span class="nav-number">3.</span> <span class="nav-text">Android Studio 快捷键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-系统常用命令"><span class="nav-number">4.</span> <span class="nav-text">Linux 系统常用命令 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试技巧"><span class="nav-number">5.</span> <span class="nav-text">调试技巧</span></a></li></ol></div>
             
 
           </div>
@@ -821,7 +859,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
