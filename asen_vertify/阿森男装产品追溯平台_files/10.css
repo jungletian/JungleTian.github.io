@@ -1,0 +1,14 @@
+/* Template 10 default style */
+.skin, .box table td.bar, .btn {
+	background: #E70012;
+	color:#fff;
+}
+#toplogobox{
+	height: 40px;
+	padding: 10px;
+	text-align:center;
+}
+#toplogobox > img{
+	max-height: 40px;
+}
+    
